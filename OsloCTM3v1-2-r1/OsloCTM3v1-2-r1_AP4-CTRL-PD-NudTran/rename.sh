@@ -34,7 +34,7 @@ cmd_cdo="${cdo} -O -f nc4 -k auto copy"
 threedcmd="${cdo} -O -f nc4 -k auto copy"
 
 ##### Model specific part start
-lowest_level=1
+lowest_level=0
 # All vars we can handle should be in here
 declare -A aerocom_vars
 aerocom_vars[o3]="vmro3"
@@ -97,7 +97,11 @@ for file in "$@"
 
    if [[ ${threedflag} -eq 1 ]]
    then #3d file: extract lowest layer
-      ${cmd} ${file} ${outfile}
+      outfile=$(echo ${outfile} | sed -e "s/_ModelLevel_/_Surface_/g")
+      ${ncks} -O -4 --chunk_policy nco -d lev,${lowest_level} -v ${_var} ${file} ${outfile}
+      ${ncwa} -O -a lev ${outfile} ${outfile}
+      ${ncrename} -O -v ${_var},${_aerocom_var} ${outfile}
+      # ${cmd} ${tmpfile} ${outfile}
    else
       ${cmd} ${file} ${outfile}
    fi
