@@ -51,6 +51,23 @@ OBS_GROUNDBASED = {
         min_num_obs={"monthly": {"daily": 3}},
         # web_interface_name='AeronetSunV3L2'),
     ),
+        "EBAS-m-tc": dict(
+            obs_id="EBASMC",
+            web_interface_name="EBAS-m",
+            obs_vars=[
+                "vmro3",
+                "concso4",
+                "vmrso2",
+                "vmrco",
+                "vmrno",
+                "vmrno2",
+                "vmrnh3",
+            ],
+            obs_vert_type="Surface",
+            colocate_time=False,
+            ts_type="monthly",
+            obs_filters=EBAS_FILTER,
+        ),
 #
 #     # "AeronetSDAV3L2": dict(
 #     #     obs_id="AeronetSDAV3Lev2.daily",
@@ -169,6 +186,7 @@ CFG = dict(
     # start='2020-12-01',
     # stop ='2021-02-28',
     var_order_menu=[
+        "od550aer",
         "vmro3",
         "concso4",
         "od550dust",
