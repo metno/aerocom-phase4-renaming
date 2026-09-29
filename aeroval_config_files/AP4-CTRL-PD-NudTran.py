@@ -51,23 +51,40 @@ OBS_GROUNDBASED = {
         min_num_obs={"monthly": {"daily": 3}},
         # web_interface_name='AeronetSunV3L2'),
     ),
-        "EBAS-m-tc": dict(
-            obs_id="EBASMC",
-            web_interface_name="EBAS-m",
-            obs_vars=[
-                "vmro3",
-                "concso4",
-                "vmrso2",
-                "vmrco",
-                "vmrno",
-                "vmrno2",
-                "vmrnh3",
-            ],
-            obs_vert_type="Surface",
-            colocate_time=False,
-            ts_type="monthly",
-            obs_filters=EBAS_FILTER,
-        ),
+    "Modis6.1terra": dict(
+        obs_id="MODIS6.1terra",
+        obs_vars=[
+            "od550aer",
+        ],
+        # obs_vars=['od550aer'],
+        # obs_data_dir=AERONET_SUN_LOCAL,
+        obs_vert_type="Column",
+        # obs_vert_type='Surface',
+        # obs_filters={**ALTITUDE_FILTER, **AERONET_SITE_FILTER},
+        min_num_obs={"monthly": {"daily": 3}},
+        web_interface_name='MODIS6.1terra',
+        regrid_res_deg={
+            "lat_res_deg": 10,
+            "lon_res_deg": 10},
+    ),
+    "EBAS-m-tc": dict(
+        obs_id="EBASMC",
+        web_interface_name="EBAS-m",
+        obs_vars=[
+            "vmro3",
+            "concso4",
+            "vmrso2",
+            "vmrco",
+            "vmrno",
+            "vmrno2",
+            "vmrnh3",
+        ],
+        obs_vert_type="Surface",
+        colocate_time=False,
+        ts_type="monthly",
+        obs_filters=EBAS_FILTER,
+    ),
+}
 #
 #     # "AeronetSDAV3L2": dict(
 #     #     obs_id="AeronetSDAV3Lev2.daily",
@@ -114,7 +131,7 @@ OBS_GROUNDBASED = {
 #             ts_type="monthly",
 #             obs_filters=EBAS_FILTER,
 #         ),
-}
+# }
 # Setup for supported satellite evaluations
 OBS_SAT = {}
 
@@ -189,9 +206,11 @@ CFG = dict(
         "od550aer",
         "vmro3",
         "concso4",
-        "od550dust",
-        "ang4487aer",
+        "vmrso2",
+        "vmrco",
+        "vmrno",
         "vmrno2",
+        "vmrnh3",
     ],
 )
 
