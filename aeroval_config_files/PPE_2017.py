@@ -18,6 +18,10 @@ MODELS = {
     #     model_id="",
     #     model_data_dir="",
     # ),
+    "NorESM-PPE": dict(
+        model_id="Aerosol_PPE",
+        model_data_dir="/lustre/storeB/project/aerocom/aerocom-users-database/AEROCOM-PHASE-IV/Aerosol_PPE/renamed/",
+    ),
     "OsloCTM3v1-2-r1": dict(
             model_id="OsloCTM3v1-2-r1",
             model_data_dir="/lustre/storeB/project/aerocom/aerocom-users-database/AEROCOM-PHASE-IV/OsloCTM3v1-2-r1/OsloCTM3v1-2-r1_AP4-CTRL-PD-NudTran/renamed/"
@@ -60,7 +64,7 @@ OBS_GROUNDBASED = {
         # obs_data_dir=AERONET_SUN_LOCAL,
         obs_vert_type="Column",
         # obs_vert_type='Surface',
-        obs_filters={**ALTITUDE_FILTER, **AERONET_SITE_FILTER},
+        # obs_filters={**ALTITUDE_FILTER, **AERONET_SITE_FILTER},
         min_num_obs={"monthly": {"daily": 3}},
         web_interface_name='MODIS6.1terra',
         regrid_res_deg={
@@ -71,13 +75,13 @@ OBS_GROUNDBASED = {
         obs_id="EBASMC",
         web_interface_name="EBAS-m",
         obs_vars=[
-            "vmro3",
+            # "vmro3",
             "concso4",
-            "vmrso2",
-            "vmrco",
-            "vmrno",
-            "vmrno2",
-            "vmrnh3",
+            # "vmrso2",
+            # "vmrco",
+            # "vmrno",
+            # "vmrno2",
+            # "vmrnh3",
         ],
         obs_vert_type="Surface",
         colocate_time=False,
@@ -157,6 +161,7 @@ CFG = dict(
     reanalyse_existing=True,
     only_json=False,
     add_model_maps=True,
+    # add_model_maps=False,
     only_model_maps=False,
     # maps_freq="yearly",
     plot_types=PLOT_TYPES,
@@ -177,8 +182,8 @@ CFG = dict(
     ts_type="daily",
     map_zoom="World",
     freqs=["monthly", "yearly"],
-    periods=['2000-2025', '2020'],
-    # periods=["2019", ],
+    # periods=['2000-2025', '2020'],
+    periods=["2017", ],
     main_freq="monthly",
     # stats_main_freq = 'daily',
     zeros_to_nan=False,
@@ -193,7 +198,7 @@ CFG = dict(
     # regions_how="default",
     annual_stats_constrained=False,
     proj_id="aerocom-phase-IV",
-    exp_id="AP4-CTRL-PD-NudTran",
+    exp_id="2017",
     exp_name="AP4_CTRL_experiments ",
     exp_descr=("Aerocom phase IV control experiment."),
     exp_pi="Jan Griesfeller (jan.griesfeller@met.no)",
@@ -225,7 +230,7 @@ if __name__ == "__main__":
     # with open(file, "w") as fh:
     #     json.dump(CFG, fh, indent=4)
 
-    ana.exp_output.delete_experiment_data()
+    # ana.exp_output.delete_experiment_data()
     # res=ana.exp_output._results_summary()
     # ana.update_interface()
     # ana.exp_output.delete_experiment_data()
