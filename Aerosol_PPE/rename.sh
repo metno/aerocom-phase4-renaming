@@ -126,6 +126,8 @@ for file in "$@"
       else
          _bla_code="Surface"
       fi
+      # make sure to put in a gregorian calenda since pyaerocom handles only that
+      ${ncatted} -O -a "calendar,time,o,c,gregorian" ${yearfile}
 		outfile="${Model}_${_aerocom_var}_${_bla_code}_${year}_${timecode}.nc"
       
 		mv ${yearfile} renamed/${outfile}
