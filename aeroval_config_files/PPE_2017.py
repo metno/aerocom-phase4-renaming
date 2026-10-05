@@ -175,7 +175,7 @@ CFG = dict(
     clear_existing_json=True,
     # if True, the analysis will stop whenever an error occurs (else, errors that
     # occurred will be written into the logfiles)
-    raise_exceptions=True,
+    raise_exceptions=False,
     # Regional filter for analysis
     filter_name="ALL-wMOUNTAINS",
     # colocation frequency (no statistics in higher resolution can be computed)

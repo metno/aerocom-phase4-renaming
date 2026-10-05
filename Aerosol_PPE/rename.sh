@@ -59,7 +59,7 @@ lowest_level=0
 
 declare -A aerocom_vars
 aerocom_vars[o3]="vmro3"
-# aerocom_vars[mmrso4]="mmrso4"
+aerocom_vars[mmrso4]="mmrso4"
 aerocom_vars[ta]="ts"
 aerocom_vars[pfull]="ps"
 aerocom_vars[no2]="vmrno2"
@@ -99,6 +99,7 @@ for file in "$@"
 	_var=$(basename ${file} | cut -d_ -f1)
 	timecode=$(basename ${file} | cut -d_ -f3)
    timecode=${aerocom_time_codes[${timecode}]}
+   
 	# split file into years
    # in principle not necessary here, but it adds the years to the temp files
 	${cdo} -O splityear ${file} splityear_${RND}_
@@ -106,12 +107,19 @@ for file in "$@"
 	# extract lowest layer if necessary
 	for yearfile in $(find . -name "splityear_${RND}_*.nc" | sort)
 		do echo ${yearfile}
+      threedflag=0
+      lev_no=$(${ncdump} -h ${yearfile}| grep ${_var} | grep lev | wc -l)
+      if [[ ${lev_no} -gt 0 ]]
+         then threedflag=1
+         cmd=${threedcmd}
+      fi
+      
 		year=$(echo ${yearfile} | cut -d_ -f3 | cut -d. -f1)
 		#${CDO} -O splitlevel,0.992556 ${yearfile} splitlevel_${RND}_
       if [[ threedflag -eq 1 ]]
          then
-		   ${NCKS} -O -d lev,${lowest_level} -v ${var} ${yearfile} ${yearfile}
-		   ${NCWA} -O -a lev ${yearfile} ${yearfile}
+		   ${ncks} -O -d lev,${lowest_level} -v ${var} ${yearfile} ${yearfile}
+		   ${ncwa} -O -a lev ${yearfile} ${yearfile}
       fi
       if [[ -v aerocom_vars[${_var}] ]]
       then
@@ -129,9 +137,11 @@ for file in "$@"
       # make sure to put in a gregorian calenda since pyaerocom handles only that
       ${ncatted} -O -a "calendar,time,o,c,gregorian" ${yearfile}
 		outfile="${Model}_${_aerocom_var}_${_bla_code}_${year}_${timecode}.nc"
+      ${cdo} -O setday,1 ${yearfile} "renamed/${outfile}"
       
-		mv ${yearfile} renamed/${outfile}
-		# rm ${yearfile} 
+      
+		# mv ${yearfile} renamed/${outfile}
+		rm ${yearfile} 
 	done
 
 done
