@@ -5,6 +5,8 @@ Config file for AeroCom PhaseIV optical properties experiment
 """
 
 import os
+# from pyaro import PyaroConfig
+from pyaerocom.io.pyaro.pyaro_config import PyaroConfig
 USER = os.getenv("USER")
 
 # BASE FILTERS
@@ -26,6 +28,10 @@ MODELS = {
             model_id="OsloCTM3v1-2-r1",
             model_data_dir="/lustre/storeB/project/aerocom/aerocom-users-database/AEROCOM-PHASE-IV/OsloCTM3v1-2-r1/OsloCTM3v1-2-r1_AP4-CTRL-PD-NudTran/renamed/"
         ),
+    "NorESM3-jang": dict(
+            model_id="NorESM3-jang",
+            model_data_dir="/lustre/storeB/project/aerocom/aerocom-users-database/AEROCOM-PHASE-IV/NorESM3-jang/NorESM3-jang-AP4-CTRL-PD-NudTran/renamed/"
+        ),
 }
 
 PLOT_TYPES = {}
@@ -40,8 +46,43 @@ VAR_OUTLIER_RANGES = {
     "vmro3": [-1, 5000],  # ppb
 }
 
+ghost_config = PyaroConfig(
+    name="ghost",
+    reader_id="ghostreader",
+    filename_or_obj_or_url="/lustre/storeB/project/aerocom/aerocom1/AEROCOM_OBSDATA/GHOST_v2/download",
+    # frequency="monthly",
+    frequency="monthly",
+    compressed=True,
+    # area_classifications=["rural", "rural-near_city", "rural-regional", "rural-remote"],
+    # station_classifications=["background"],
+    name_map={
+        # "pm10": "concpm10",
+        # "pm2p5": "concpm25",
+        # "sconcno2": "vmrno2",
+        # "sconcso4": "concso4",
+        "sconcso2": "vmrso2",
+    },
+    filters={
+        "time_bounds": {
+            "startend_include": [
+                ("2017-01-01 00:00:00", "2017-12-31 23:59:59")
+            ],  # Include data between these time bounds
+        },
+        # "variables": {"include": ["pm10", "pm2p5"]},
+        "variables": {"include": ["sconcso2"]},
+    },
+)
+
 EBAS_FILTER = dict(station_name="U*", negate="station_name")
 OBS_GROUNDBASED = {
+    "GHOST": dict(
+        obs_id=ghost_config.name,  # Must be set to the name found in the config
+        pyaro_config=ghost_config,  # The pyaro config
+        web_interface_name="GHOST",  # Name that is displayed on the webpage
+        obs_vars=["vmrso2"],  # List of variables that is to be evaluated
+        obs_vert_type="Surface",  # Observation level
+        ts_type="monthly",  # Frequency of read observations. Evaluation can not be finer than this, for this network
+    ),
     "AeronetSunV3L2": dict(
         obs_id="AeronetSunV3Lev2.daily",
         obs_vars=[
@@ -77,7 +118,7 @@ OBS_GROUNDBASED = {
         obs_vars=[
             # "vmro3",
             "concso4",
-            # "vmrso2",
+            "vmrso2",
             # "vmrco",
             # "vmrno",
             # "vmrno2",
@@ -160,8 +201,8 @@ CFG = dict(
     # if True, existing colocated data files will be deleted
     reanalyse_existing=True,
     only_json=False,
-    add_model_maps=True,
-    # add_model_maps=False,
+    # add_model_maps=True,
+    add_model_maps=False,
     only_model_maps=False,
     # maps_freq="yearly",
     plot_types=PLOT_TYPES,
